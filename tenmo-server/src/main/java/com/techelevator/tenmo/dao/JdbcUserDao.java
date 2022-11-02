@@ -47,6 +47,26 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
+    public void transferTo (int fromId, int toId, BigDecimal transferAmount){
+        boolean approved = true;
+
+        BigDecimal fromBalance = getBalanceById(fromId);
+
+        if (fromId == toId || fromBalance.compareTo(transferAmount) < 0 || transferAmount.compareTo(BigDecimal.ZERO) <= 0 ){
+        approved = false;
+        }
+        if (approved == true) {
+            String sql = "UPDATE account SET balance - ? WHERE user_id = ?;";
+            jdbcTemplate.update(sql, transferAmount, fromId);
+            sql = "UPDATE account SET balance + ? WHERE user_id = ?;";
+            jdbcTemplate.update(sql, transferAmount, toId);
+            System.out.println("Transaction Approved!");
+            System.out.println("Your updated balance is: " + (fromBalance.subtract(transferAmount)));
+        }
+        System.out.println("Transaction unsuccessful");
+    }
+
+    @Override
     public User getUserById(int userId) {
         String sql = "SELECT user_id, username, password_hash FROM tenmo_user WHERE user_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);

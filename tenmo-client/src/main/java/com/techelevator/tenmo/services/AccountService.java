@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.services;
 
+import com.techelevator.tenmo.model.User;
 import org.springframework.web.client.RestTemplate;
 import com.techelevator.util.BasicLogger;
 import org.springframework.http.HttpEntity;
@@ -34,6 +35,22 @@ public class AccountService {
             BasicLogger.log(e.getMessage());
         }
         return balance;
+    }
+
+    public User[] listUsers(){
+        User[] users = restTemplate.getForObject(API_BASE_URL + "account", User[].class);
+        return users;
+
+    }
+
+    public void transferTo(int toId, BigDecimal transferAmount){
+
+        try {
+            restTemplate.put(API_BASE_URL + "account/" + toId + "/balance", HttpMethod.PUT, BigDecimal.class);
+        }
+        catch (RestClientResponseException |ResourceAccessException e){
+            BasicLogger.log(e.getMessage());
+        }
     }
 
 }
