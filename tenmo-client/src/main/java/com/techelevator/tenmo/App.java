@@ -7,6 +7,8 @@ import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
 import io.cucumber.java.bs.A;
 
+import java.math.BigDecimal;
+
 public class App {
 
     private static final String API_BASE_URL = "http://localhost:8080/";
@@ -90,7 +92,8 @@ public class App {
 	private void viewCurrentBalance() {
 		// TODO Auto-generated method stub
        int userId = currentUser.getUser().getId();
-       accountService.getBalance(userId);
+       BigDecimal balance = accountService.getBalance(userId);
+        System.out.println(balance.toString());;
 
 		
 	}
