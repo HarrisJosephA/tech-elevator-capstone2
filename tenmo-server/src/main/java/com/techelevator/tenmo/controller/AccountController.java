@@ -29,9 +29,9 @@ public class AccountController {
     }
 
     //TransferTo
-    @RequestMapping(path = "account/{id}/balance", method = RequestMethod.PUT)
-    public void transferAmount (@RequestBody BigDecimal transferAmount, @PathVariable int fromId, int toId){
-        userDao.transferTo(fromId, toId, transferAmount);
+    @RequestMapping(path = "account/{username}/transfer", method = RequestMethod.PUT)
+    public void transferAmount (@RequestBody String transferName, BigDecimal transferAmount, @PathVariable int fromId){
+        userDao.transferTo(fromId, transferName, transferAmount);
     }
 
 

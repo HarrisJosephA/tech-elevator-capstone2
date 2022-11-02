@@ -43,10 +43,10 @@ public class AccountService {
 
     }
 
-    public void transferTo(int toId, BigDecimal transferAmount){
+    public void transferTo(String transferName, BigDecimal transferAmount){
 
         try {
-            restTemplate.put(API_BASE_URL + "account/" + toId + "/balance", HttpMethod.PUT, BigDecimal.class);
+            restTemplate.put(API_BASE_URL + "account/" + transferName + "/transfer", BigDecimal.class);
         }
         catch (RestClientResponseException |ResourceAccessException e){
             BasicLogger.log(e.getMessage());
