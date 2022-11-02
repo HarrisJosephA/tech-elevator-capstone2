@@ -37,6 +37,15 @@ public class JdbcUserDao implements UserDao {
         return userId;
     }
 
+    //WROTE GET BALANCE
+    @Override
+    public BigDecimal getBalanceById (int userId){
+        String sql = "SELECT balance FROM account WHERE user_id = ?;";
+        BigDecimal balance = jdbcTemplate.queryForObject(sql, BigDecimal.class, userId);
+
+        return balance;
+    }
+
     @Override
     public User getUserById(int userId) {
         String sql = "SELECT user_id, username, password_hash FROM tenmo_user WHERE user_id = ?";
@@ -95,6 +104,8 @@ public class JdbcUserDao implements UserDao {
 
         return true;
     }
+
+    //TODO Create User Balance getter to Database
 
     private User mapRowToUser(SqlRowSet rs) {
         User user = new User();
