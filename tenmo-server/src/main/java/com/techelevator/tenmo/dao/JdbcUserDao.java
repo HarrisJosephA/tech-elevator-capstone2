@@ -47,16 +47,20 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public void transferTo (int fromId, int toId, BigDecimal transferAmount){
+    public void transferTo (int fromId, String transferName, BigDecimal transferAmount){
         boolean approved = true;
 
         BigDecimal fromBalance = getBalanceById(fromId);
+
+        String sql = "Select user_id FROM account WHERE user_name = ?;";
+        int toId = jdbcTemplate.queryForObject(sql, Integer.class, transferName);
+
 
         if (fromId == toId || fromBalance.compareTo(transferAmount) < 0 || transferAmount.compareTo(BigDecimal.ZERO) <= 0 ){
         approved = false;
         }
         if (approved == true) {
-            String sql = "UPDATE account SET balance - ? WHERE user_id = ?;";
+            sql = "UPDATE account SET balance - ? WHERE user_id = ?;";
             jdbcTemplate.update(sql, transferAmount, fromId);
             sql = "UPDATE account SET balance + ? WHERE user_id = ?;";
             jdbcTemplate.update(sql, transferAmount, toId);

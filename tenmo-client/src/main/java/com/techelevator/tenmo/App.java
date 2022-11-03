@@ -9,6 +9,7 @@ import com.techelevator.tenmo.services.ConsoleService;
 import io.cucumber.java.bs.A;
 
 import java.math.BigDecimal;
+import java.util.Scanner;
 
 public class App {
 
@@ -17,6 +18,7 @@ public class App {
     private final ConsoleService consoleService = new ConsoleService();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
     private final AccountService accountService = new AccountService();
+    public Scanner inputScanner = new Scanner(System.in);
 
     private AuthenticatedUser currentUser;
 
@@ -114,9 +116,18 @@ public class App {
         //int userId = currentUser.getUser().getId();
         User[] activeUsers = accountService.listUsers();
         for (int i = 0; i < activeUsers.length; i++){
-            System.out.println(i + activeUsers[i].getUsername());
+
+            System.out.println("");
+            System.out.println((i + 1) + ".  " + activeUsers[i].getUsername());
 
         }
+        System.out.println("Please type the full username of the user you would like to transfer to.");
+
+        String transferName = inputScanner.nextLine().trim();
+        System.out.println("Please enter the amount you would like to transfer.");
+        BigDecimal transferAmount = inputScanner.nextBigDecimal();
+        accountService.transferTo(transferName, transferAmount);
+
 		
 	}
 
