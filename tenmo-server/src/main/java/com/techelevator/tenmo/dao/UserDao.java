@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface UserDao {
 
-    void transferTo (int fromId, String transferName,  BigDecimal transferAmount);
 
     List<User> findAll();
 
@@ -16,6 +15,8 @@ public interface UserDao {
     User getUserById(int id);
 
     User findByUsername(String username);
+
+    int getIdByUsername(String username);
 
     int findIdByUsername(String username);
 
