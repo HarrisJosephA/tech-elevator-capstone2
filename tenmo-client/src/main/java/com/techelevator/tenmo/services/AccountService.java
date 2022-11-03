@@ -26,6 +26,7 @@ public class AccountService {
      *  Getting account balance
      */
 
+
     public BigDecimal getBalance(int userId) {
         BigDecimal balance = null;
 
@@ -37,11 +38,20 @@ public class AccountService {
         return balance;
     }
 
+
+
+
+
+
     public User[] listUsers(){
         User[] users = restTemplate.getForObject(API_BASE_URL + "account", User[].class);
         return users;
 
     }
+
+
+
+
 
     public void transferTo(int toId, BigDecimal transferAmount){
 
