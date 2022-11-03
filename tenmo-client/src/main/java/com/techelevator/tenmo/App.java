@@ -1,15 +1,19 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+import com.techelevator.tenmo.services.TransferService;
 import io.cucumber.java.bs.A;
 
 import java.math.BigDecimal;
 import java.util.Scanner;
+
+import static java.math.BigDecimal.ZERO;
 
 public class App {
 
@@ -18,6 +22,7 @@ public class App {
     private final ConsoleService consoleService = new ConsoleService();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
     private final AccountService accountService = new AccountService();
+    private final TransferService transferService = new TransferService();
     public Scanner inputScanner = new Scanner(System.in);
 
     private AuthenticatedUser currentUser;
@@ -123,10 +128,23 @@ public class App {
         }
         System.out.println("Please type the full username of the user you would like to transfer to.");
 
-        String transferName = inputScanner.nextLine().trim();
+        String accountToName = inputScanner.nextLine().trim();
+        int accountTo = accountService.getIdByUsername(accountToName);
         System.out.println("Please enter the amount you would like to transfer.");
         BigDecimal transferAmount = inputScanner.nextBigDecimal();
-        accountService.transferTo(transferName, transferAmount);
+        int accountFrom = accountService.getIdByUsername(currentUser.getUser().getUsername());
+        BigDecimal accountFromBalance = accountService.getBalance(currentUser.getUser().getId());
+        Transfer newTransfer = new Transfer(accountFrom, accountTo, transferAmount);
+        if (accountFrom == accountTo || transferAmount.compareTo(ZERO) <= 0 || transferAmount.compareTo(accountFromBalance) > 0){
+            newTransfer.setTransferStatusId(3);
+        }
+        else newTransfer.setTransferStatusId(2);
+        newTransfer.setTransferTypeId(2);
+        if (newTransfer.getTransferStatusId() == 3){
+            transferService.createTransfer(newTransfer);
+            System.out.println("Transfer is rejected.");
+        }
+        else transferService.createTransfer(newTransfer);
 
 		
 	}

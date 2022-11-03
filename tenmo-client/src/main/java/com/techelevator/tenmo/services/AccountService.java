@@ -53,4 +53,14 @@ public class AccountService {
         }
     }
 
+    public int getIdByUsername(String username) {
+        int accountId = 0;
+        try {
+            accountId = restTemplate.getForObject(API_BASE_URL + "tenmo_user/" + username, Integer.class);
+        } catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
+        return accountId;
+    }
+
 }

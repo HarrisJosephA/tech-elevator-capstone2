@@ -28,16 +28,24 @@ public class AccountController {
         return userDao.findAll();
     }
 
-    //TransferTo
-    @RequestMapping(path = "account/{username}/transfer", method = RequestMethod.PUT)
-    public void transferAmount (@RequestBody String transferName, BigDecimal transferAmount, @PathVariable int fromId){
-        userDao.transferTo(fromId, transferName, transferAmount);
+    @RequestMapping(path = "tenmo_user/{username}",method = RequestMethod.GET)
+    public int idByUsername (@PathVariable String username) {
+        int accountId = userDao.getIdByUsername(username);
+        return accountId;
     }
 
+    }
+
+    //TransferTo
+//    @RequestMapping(path = "account/{username}/transfer", method = RequestMethod.PUT)
+//    public void transferAmount (@RequestBody String transferName, BigDecimal transferAmount, @PathVariable int fromId){
+//        userDao.transferTo(fromId, transferName, transferAmount);
+//    }
 
 
 
 
 
 
-}
+
+
