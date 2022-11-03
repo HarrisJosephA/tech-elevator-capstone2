@@ -46,25 +46,29 @@ public class JdbcUserDao implements UserDao {
         return balance;
     }
 
-    @Override
-    public void transferTo (int fromId, int toId, BigDecimal transferAmount){
-        boolean approved = true;
-
-        BigDecimal fromBalance = getBalanceById(fromId);
-
-        if (fromId == toId || fromBalance.compareTo(transferAmount) < 0 || transferAmount.compareTo(BigDecimal.ZERO) <= 0 ){
-        approved = false;
-        }
-        if (approved == true) {
-            String sql = "UPDATE account SET balance - ? WHERE user_id = ?;";
-            jdbcTemplate.update(sql, transferAmount, fromId);
-            sql = "UPDATE account SET balance + ? WHERE user_id = ?;";
-            jdbcTemplate.update(sql, transferAmount, toId);
-            System.out.println("Transaction Approved!");
-            System.out.println("Your updated balance is: " + (fromBalance.subtract(transferAmount)));
-        }
-        System.out.println("Transaction unsuccessful");
-    }
+//    @Override
+//    public void transferTo (int fromId, String transferName, BigDecimal transferAmount){
+//        boolean approved = true;
+//
+//        BigDecimal fromBalance = getBalanceById(fromId);
+//
+//        String sql = "Select user_id FROM account WHERE user_name = ?;";
+//        int toId = jdbcTemplate.queryForObject(sql, Integer.class, transferName);
+//
+//
+//        if (fromId == toId || fromBalance.compareTo(transferAmount) < 0 || transferAmount.compareTo(BigDecimal.ZERO) <= 0 ){
+//        approved = false;
+//        }
+//        if (approved == true) {
+//            sql = "UPDATE account SET balance - ? WHERE user_id = ?;";
+//            jdbcTemplate.update(sql, transferAmount, fromId);
+//            sql = "UPDATE account SET balance + ? WHERE user_id = ?;";
+//            jdbcTemplate.update(sql, transferAmount, toId);
+//            System.out.println("Transaction Approved!");
+//            System.out.println("Your updated balance is: " + (fromBalance.subtract(transferAmount)));
+//        }
+//        System.out.println("Transaction unsuccessful");
+//    }
 
     @Override
     public User getUserById(int userId) {
@@ -75,6 +79,15 @@ public class JdbcUserDao implements UserDao {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public int getIdByUsername(String username) {
+        String sql = "SELECT account_id FROM account " +
+                "JOIN tenmo_user ON account.user_id = tenmo_user.user_id " +
+                "WHERE username = ?;";
+        int userId = jdbcTemplate.queryForObject(sql, Integer.class, username);
+        return userId;
     }
 
     @Override
