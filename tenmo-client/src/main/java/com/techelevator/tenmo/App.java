@@ -130,6 +130,8 @@ public class App {
 
         String accountToName = inputScanner.nextLine().trim();
         int accountTo = accountService.getIdByUsername(accountToName);
+
+
         System.out.println("Please enter the amount you would like to transfer.");
         BigDecimal transferAmount = inputScanner.nextBigDecimal();
         int accountFrom = accountService.getIdByUsername(currentUser.getUser().getUsername());
